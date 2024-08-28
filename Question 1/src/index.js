@@ -1,70 +1,40 @@
 const express = require('express');
-const axios = require('axios');
 const app = express();
+const port = 9876;
 
-const PORT = process.env.PORT || 3000;
-const WINDOW_SIZE = 10; // Set the window size
-let numbersWindow = []; // Array to hold unique numbers
-
-const ACCESS_TOKEN = 'YOUR_ACCESS_TOKEN'; // Replace with your actual access token
-
-app.get('/numbers/:numberid', async (req, res) => {
-    const { numberid } = req.params;
-    let apiUrl = '';
-
-    // Determine the API URL based on the number ID
-    switch (numberid) {
+// Function to generate numbers based on the ID
+const generateNumbers = (id) => {
+    switch (id) {
         case 'p':
-            apiUrl = 'https://example.com/api/primes'; // Replace with actual API URL
-            break;
+            // Generate a list of prime numbers (example)
+            return [2, 3, 5, 7, 11, 13, 17, 19, 23, 29];
         case 'f':
-            apiUrl = 'https://example.com/api/fibonacci'; // Replace with actual API URL
-            break;
+            // Generate a list of Fibonacci numbers (example)
+            return [0, 1, 1, 2, 3, 5, 8, 13, 21, 34];
         case 'e':
-            apiUrl = 'https://example.com/api/even'; // Replace with actual API URL
-            break;
+            // Generate a list of even numbers (example)
+            return [2, 4, 6, 8, 10, 12, 14, 16, 18, 20];
         case 'r':
-            apiUrl = 'https://example.com/api/random'; // Replace with actual API URL
-            break;
+            // Generate a list of random numbers (example)
+            return [7, 14, 21, 28, 35, 42, 49, 56, 63, 70];
         default:
-            return res.status(400).json({ error: 'Invalid number ID' });
+            return [];
+    }
+};
+
+// API endpoint to get numbers based on the ID
+app.get('/numbers/:id', (req, res) => {
+    const id = req.params.id;
+    const numbers = generateNumbers(id);
+
+    if (!['p', 'f', 'e', 'r'].includes(id)) {
+        return res.status(400).json({ error: 'Invalid ID' });
     }
 
-    try {
-        console.log(`Fetching from ${apiUrl}`);
-        const response = await axios.get(apiUrl, {
-            headers: { 'Authorization': `Bearer ${ACCESS_TOKEN}` },
-            timeout: 500
-        });
-
-        // Log the full response for debugging
-        console.log(`Full Response: ${JSON.stringify(response.data)}`);
-
-        const newNumbers = response.data.numbers || [];
-        const uniqueNumbers = Array.from(new Set([...numbersWindow, ...newNumbers]));
-
-        // Maintain the window size
-        if (uniqueNumbers.length > WINDOW_SIZE) {
-            numbersWindow = uniqueNumbers.slice(-WINDOW_SIZE);
-        } else {
-            numbersWindow = uniqueNumbers;
-        }
-
-        // Calculate the average
-        const avg = numbersWindow.length ? (numbersWindow.reduce((a, b) => a + b, 0) / numbersWindow.length).toFixed(2) : 0;
-
-        // Respond with the current state
-        res.json({
-            windowPrevState: numbersWindow,
-            windowCurrState: numbersWindow,
-            numbers: newNumbers,
-            avg: parseFloat(avg)
-        });
-    } catch (error) {
-        console.error(`Error: ${error.message}`);
-        console.error(`Stack: ${error.stack}`);
-        res.status(500).json({ error: 'Error fetching numbers', details: error.message });
-    }
+    res.json({ numbers });
 });
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// Start the server
+app.listen(port, () => {
+    console.log(`Server running on http://localhost:${port}`);
+});
