@@ -1,4 +1,5 @@
-Average Calculator Microservice
+# Average Calculator Microservice
+
 A microservice that provides an endpoint to fetch numbers based on different categories, manage a sliding window of stored numbers, and calculate the average of the numbers in the window.
 
 Features
@@ -19,7 +20,7 @@ r: Random numbers
 Example Request
 http
 Copy code
-GET http://localhost:9876/numbers/e
+GET <http://localhost:9876/numbers/e>
 Example Response
 json
 Copy code
@@ -38,7 +39,7 @@ Clone the Repository:
 
 bash
 Copy code
-git clone https://github.com/yourusername/average-calculator.git
+git clone <https://github.com/yourusername/average-calculator.git>
 cd average-calculator
 Install Dependencies:
 
@@ -51,7 +52,7 @@ Edit the index.js file to replace the placeholder URL with the actual third-part
 
 javascript
 Copy code
-const API_URL = 'https://api.example.com/numbers'; // Replace with the actual API URL
+const API_URL = '<https://api.example.com/numbers>'; // Replace with the actual API URL
 Start the Server:
 
 bash
@@ -68,7 +69,7 @@ Example with curl:
 
 bash
 Copy code
-curl http://localhost:9876/numbers/e
+curl <http://localhost:9876/numbers/e>
 View the Response:
 
 The response will include the previous and current state of the window, the numbers fetched, and the average.
